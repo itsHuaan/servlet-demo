@@ -16,7 +16,7 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String searchInput = request.getParameter("searchInput");
-        List<ProductDTO> searched_list_product = _productService.getProductsByName(searchInput);
+        List<ProductDTO> searched_list_product = _productService.getProductByName(searchInput);
         request.setAttribute("list_product", searched_list_product);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
         requestDispatcher.forward(request, response);

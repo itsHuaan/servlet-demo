@@ -16,7 +16,16 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<ProductDTO> list_product = _productService.getProducts();
+        String orderBy = request.getParameter("orderBy");
+        List<ProductDTO> list_product = _productService.getProducts(orderBy);
+        HttpSession session = request.getSession();
+        List<String> lines = (List<String>) session.getAttribute("product_lines");
+        if (lines == null) {
+            lines = _productService.getProductColumn("productLine", "productlines");
+            session.setAttribute("product_lines", lines);  // Lưu vào session
+        }
+
+        request.setAttribute("product_lines", lines);
         request.setAttribute("list_product", list_product);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
         requestDispatcher.forward(request, response);
