@@ -17,4 +17,5 @@ public class ProductDTO {
     private int quantityInStock;
     private double buyPrice;
     private double MSRP;
+    private boolean status;
 }

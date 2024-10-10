@@ -8,18 +8,16 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name = "SearchServlet", value = "/SearchServlet")
-public class SearchServlet extends HttpServlet {
-    private final ProductService _productService = new ProductService();
+@WebServlet(name = "DetailServlet", value = "/DetailServlet")
+public class DetailServlet extends HttpServlet {
+    IProductService productService = new ProductService();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String searchInput = request.getParameter("searchInput");
-        List<ProductDTO> searched_list_product = _productService.getProductByName(searchInput);
-        request.setAttribute("list_product", searched_list_product);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("shop.jsp");
-        requestDispatcher.forward(request, response);
+        ProductDTO product = productService.getProductByID(request.getParameter("productCode"));
+        request.setAttribute("product", product);
+        request.getRequestDispatcher("detail.jsp").forward(request, response);
     }
 
     @Override

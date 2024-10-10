@@ -10,14 +10,22 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "SearchServlet", value = "/SearchServlet")
-public class SearchServlet extends HttpServlet {
-    private final ProductService _productService = new ProductService();
+@WebServlet(name = "ShopServlet", value = "/ShopServlet")
+public class ShopServlet extends HttpServlet {
+    private final IProductService _productService = new ProductService();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String searchInput = request.getParameter("searchInput");
-        List<ProductDTO> searched_list_product = _productService.getProductByName(searchInput);
-        request.setAttribute("list_product", searched_list_product);
+        String orderBy = request.getParameter("orderBy");
+        List<ProductDTO> list_product = _productService.getProducts(orderBy);
+        HttpSession session = request.getSession();
+        List<String> lines = (List<String>) session.getAttribute("product_lines");
+        if (lines == null) {
+            lines = _productService.getProductColumn("productLine", "productlines");
+            session.setAttribute("product_lines", lines);
+        }
+        request.setAttribute("product_lines", lines);
+        request.setAttribute("list_product", list_product);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("shop.jsp");
         requestDispatcher.forward(request, response);
     }

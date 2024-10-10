@@ -5,9 +5,7 @@
     <title>JSP - Hello World</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
-<br/>
-<a href="ProductServlet">Product</a>
+<a href="ProductServlet">Product Management</a>
+<a href="ShopServlet">Shopping Page</a>
 </body>
 </html>

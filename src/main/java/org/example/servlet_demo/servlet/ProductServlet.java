@@ -12,7 +12,7 @@ import java.util.List;
 
 @WebServlet(name = "ProductServlet", value = "/ProductServlet")
 public class ProductServlet extends HttpServlet {
-    private IProductService _productService = new ProductService();
+    private final IProductService _productService = new ProductService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -22,12 +22,11 @@ public class ProductServlet extends HttpServlet {
         List<String> lines = (List<String>) session.getAttribute("product_lines");
         if (lines == null) {
             lines = _productService.getProductColumn("productLine", "productlines");
-            session.setAttribute("product_lines", lines);  // Lưu vào session
+            session.setAttribute("product_lines", lines);
         }
-
         request.setAttribute("product_lines", lines);
         request.setAttribute("list_product", list_product);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("management.jsp");
         requestDispatcher.forward(request, response);
     }
 
