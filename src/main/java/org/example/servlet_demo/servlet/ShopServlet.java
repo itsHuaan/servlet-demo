@@ -8,6 +8,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ShopServlet", value = "/ShopServlet")
@@ -17,15 +18,28 @@ public class ShopServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String orderBy = request.getParameter("orderBy");
+        String line = request.getParameter("productLine");
         List<ProductDTO> list_product = _productService.getProducts(orderBy);
+        List<ProductDTO> list_product_by_line = _productService.getProductByLine(line);
         HttpSession session = request.getSession();
+        List<ProductDTO> cart = (List<ProductDTO>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
         List<String> lines = (List<String>) session.getAttribute("product_lines");
         if (lines == null) {
             lines = _productService.getProductColumn("productLine", "productlines");
             session.setAttribute("product_lines", lines);
         }
         request.setAttribute("product_lines", lines);
-        request.setAttribute("list_product", list_product);
+        if (line == null || lines.isEmpty()) {
+            request.setAttribute("productLine", "");
+            request.setAttribute("list_product", list_product);
+        } else {
+            request.setAttribute("productLine", line);
+            request.setAttribute("list_product", list_product_by_line);
+        }
+        session.setAttribute("cart", cart);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("shop.jsp");
         requestDispatcher.forward(request, response);
     }

@@ -149,6 +149,44 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<ProductDTO> getProductByLine(String line) {
+        List<ProductDTO> products = new ArrayList<>();
+        String query = "select * from products where productLine = ?";
+        try {
+            connection = dbConnector.openConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, line);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String productCode = resultSet.getString(1);
+                String productName = resultSet.getString(2);
+                String productLine = resultSet.getString(3);
+                String productScale = resultSet.getString(4);
+                String productVendor = resultSet.getString(5);
+                String productDescription = resultSet.getString(6);
+                int quantityInStock = resultSet.getInt(7);
+                double buyPrice = resultSet.getDouble(8);
+                double MSRP = resultSet.getDouble(9);
+                boolean status = resultSet.getBoolean(10);
+                products.add(new ProductDTO(productCode,
+                        productName,
+                        productLine,
+                        productScale,
+                        productVendor,
+                        productDescription,
+                        quantityInStock,
+                        buyPrice,
+                        MSRP,
+                        status));
+            }
+            dbConnector.closeConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return products;
+    }
+
+    @Override
     public boolean removeProductByID(String id) {
         ProductDTO product = getProductByID(id);
         boolean status = product.isStatus();

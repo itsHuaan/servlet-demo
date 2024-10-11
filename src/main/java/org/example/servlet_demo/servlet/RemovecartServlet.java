@@ -1,6 +1,7 @@
 package org.example.servlet_demo.servlet;
 
 import org.example.servlet_demo.dto.ProductDTO;
+import org.example.servlet_demo.service.IProductService;
 import org.example.servlet_demo.service.ProductService;
 
 import javax.servlet.*;
@@ -10,9 +11,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "AddtocartServlet", value = "/AddtocartServlet")
-public class AddtocartServlet extends HttpServlet {
-    ProductService productService = new ProductService();
+@WebServlet(name = "RemovecartServlet", value = "/RemovecartServlet")
+public class RemovecartServlet extends HttpServlet {
+    IProductService productService = new ProductService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -21,10 +22,9 @@ public class AddtocartServlet extends HttpServlet {
         List<ProductDTO> cart = (List<ProductDTO>) session.getAttribute("cart");
         ProductDTO product = productService.getProductByID(productCode);
         if (product != null) {
-            cart.add(product);
+            cart.remove(product);
         }
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/DetailServlet?productCode=" + productCode);
-        requestDispatcher.forward(request, response);
+        response.sendRedirect("CartServlet");
     }
 
     @Override

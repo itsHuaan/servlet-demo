@@ -45,7 +45,7 @@
                     <p class="text-muted">MSRP: $${product.MSRP}</p>
                     <div class="d-flex justify-content-start mb-3">
                         <a href="AddtocartServlet?productCode=${product.productCode}"
-                           class="btn btn-success btn-lg me-3" onclick="addedToCard(${message})">
+                           class="btn btn-success btn-lg me-3" onclick="addedToCard()">
                             Add to Cart</a>
                         <button class="btn btn-primary btn-lg me-3">Buy Now</button>
                     </div>
@@ -55,8 +55,8 @@
     </div>
 </div>
 <script>
-    function addedToCard(alertmessage) {
-        alert(${alertmessage})
+    function addedToCard() {
+        alert("Added to cart")
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

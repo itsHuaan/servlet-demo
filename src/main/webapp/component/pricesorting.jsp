@@ -12,16 +12,13 @@
     orderBy = "default";
   }
 %>
-
-<div class="container mt-4">
-  <form id="sortForm" action="./ShopServlet" method="get" class="d-flex justify-content-end mb-3">
-    <select name="orderBy" id="orderBy" class="form-select w-auto" onChange="submitDropdown()">
-      <option value="default" <%= orderBy.equals("default") ? "selected" : "" %>>Sort by Price</option>
-      <option value="asc" <%= orderBy.equals("asc") ? "selected" : "" %>>Low to High</option>
-      <option value="desc" <%= orderBy.equals("desc") ? "selected" : "" %>>High to Low</option>
-    </select>
-  </form>
-</div>
+<form id="sortForm" action="./ShopServlet" method="get" class="d-flex justify-content-end mb-3">
+  <select name="orderBy" id="orderBy" class="form-select w-auto" onChange="submitDropdown()">
+    <option value="default" <%= orderBy.equals("default") ? "selected" : "" %>>Sort by Price</option>
+    <option value="asc" <%= orderBy.equals("asc") ? "selected" : "" %>>Low to High</option>
+    <option value="desc" <%= orderBy.equals("desc") ? "selected" : "" %>>High to Low</option>
+  </select>
+</form>
 
 
 <script>

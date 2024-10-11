@@ -9,5 +9,6 @@ public interface IProductService {
     ProductDTO getProductByID(String id);
     List<ProductDTO> getProductByName(String name);
     List<String> getProductColumn(String column_name, String table_name);
+    List<ProductDTO> getProductByLine(String line);
     boolean removeProductByID(String id);
 }

@@ -12,29 +12,49 @@
 
 <jsp:include page="component/navbar.jsp"/>
 
-<jsp:include page="component/pricesorting.jsp"/>
 
-<div class="container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        <c:forEach var="item" items="${list_product}">
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://picsum.photos/500/500?random=${item.productCode}" class="card-img-top"
-                         alt="${item.productName}"
-                         style="height: 15rem; object-fit: cover;">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="productName">${item.productName}</h5>
-                        <p class="inStock">In Stock: ${item.quantityInStock}</p>
-                        <div class="mt-auto text-end">
-                            <p class="price text-success fw-bold">$${item.buyPrice}</p>
-                            <a href="DetailServlet?productCode=${item.productCode}"
-                               class="btn btn-primary w-100">Detail</a>
-                        </div>
-                    </div>
+<div class="container-fluid">
+    <div class="row">
+        <jsp:include page="component/sidebar.jsp"/>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="container mt-4" style="display: flex; flex-direction: row; justify-content: space-between">
+                    <h3>
+                        <c:choose>
+                            <c:when test="${not empty productLine}">
+                                Products in "${productLine}"
+                            </c:when>
+                            <c:otherwise>
+                                All products
+                            </c:otherwise>
+                        </c:choose>
+                    </h3>
+                    <jsp:include page="component/pricesorting.jsp"/>
                 </div>
             </div>
-        </c:forEach>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                <c:forEach var="item" items="${list_product}">
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="https://picsum.photos/500/500?random=${item.productCode}" class="card-img-top"
+                                 alt="${item.productName}"
+                                 style="height: 15rem; object-fit: cover;">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="productName">${item.productName}</h5>
+                                <p class="inStock">In Stock: ${item.quantityInStock}</p>
+                                <div class="mt-auto text-end">
+                                    <p class="price text-success fw-bold">$${item.buyPrice}</p>
+                                    <a href="DetailServlet?productCode=${item.productCode}"
+                                       class="btn btn-primary w-100">Detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
     </div>
 </div>
+
 </body>
 </html>
