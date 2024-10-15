@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -43,17 +44,21 @@
             color: #ff4d4d;
         }
 
-        .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 1rem;
-            text-align: center;
+        .scrollable-items {
+            max-height: 550px;
+            overflow-y: auto;
+            border-top: 0px solid #ddd;
+            padding-top: 16px;
+            scrollbar-width: none;
         }
 
-        .total-price {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ffd700;
+        .scrollable-items::-webkit-scrollbar {
+            display: none;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -61,7 +66,7 @@
 
 <jsp:include page="component/navbar.jsp"/>
 
-<section class="h-100 h-custom" style="background-color: #eee;">
+<section class="h-100 h-custom">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col">
@@ -71,8 +76,11 @@
                         <div class="row">
 
                             <div class="col-lg-7">
-                                <h5 class="mb-3"><a href="ShopServlet" class="text-body"><i
-                                        class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
+                                <h5 class="mb-3">
+                                    <a href="ShopServlet" class="text-body">
+                                        <i class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping
+                                    </a>
+                                </h5>
                                 <hr>
 
                                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -81,44 +89,46 @@
                                         <p class="mb-0">You have ${cart.size()} items in your cart</p>
                                     </div>
                                     <div>
-                                        <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!"
-                                                                                                    class="text-body">price
-                                            <i class="fas fa-angle-down mt-1"></i></a></p>
+                                        <p class="mb-0">
+                                            <span class="text-muted">Sort by:</span>
+                                            <a href="#!" class="text-body">price <i class="fas fa-angle-down mt-1"></i></a>
+                                        </p>
                                     </div>
                                 </div>
 
-                                <c:forEach var="item" items="${cart}">
-                                    <div class="card mb-3">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row align-items-center">
-                                                    <div>
-                                                        <img
-                                                                src="https://picsum.photos/200?random=${item.productCode}"
-                                                                class="img-fluid rounded-3" alt="Shopping item"
-                                                                style="width: 65px;">
+                                <div class="scrollable-items">
+                                    <c:forEach var="item" items="${cart}">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="d-flex flex-row align-items-center">
+                                                        <div>
+                                                            <img src="https://picsum.photos/200?random=${item.productCode}"
+                                                                 class="img-fluid rounded-3" alt="Shopping item"
+                                                                 style="width: 65px;">
+                                                        </div>
+                                                        <div class="ms-3">
+                                                            <h5>${item.productName}</h5>
+                                                            <p class="small mb-0"></p>
+                                                        </div>
                                                     </div>
-                                                    <div class="ms-3">
-                                                        <h5>${item.productName}</h5>
-                                                        <p class="small mb-0"></p>
+                                                    <div class="d-flex flex-row align-items-center">
+                                                        <div style="width: 50px;">
+<%--                                                            <h5 class="fw-normal mb-0">${item.quantityInStock}</h5>--%>
+                                                        </div>
+                                                        <div style="width: 80px;">
+                                                            <h5 class="mb-0">$${item.buyPrice}</h5>
+                                                        </div>
+                                                        <a href="RemovecartServlet?productCode=${item.productCode}">
+                                                            <i class="fas fa-trash-alt btn-remove"></i>
+                                                        </a>
                                                     </div>
-                                                </div>
-                                                <div class="d-flex flex-row align-items-center">
-                                                    <div style="width: 50px;">
-                                                        <h5 class="fw-normal mb-0">${item.quantityInStock}</h5>
-                                                    </div>
-                                                    <div style="width: 80px;">
-                                                        <h5 class="mb-0">$${item.buyPrice}</h5>
-                                                    </div>
-                                                    <a href="RemovecartServlet?productCode=${item.productCode}">
-                                                        <i class="fas fa-trash-alt btn-remove"></i>
-                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <c:set var="totalPrice" value="${totalPrice + item.buyPrice}"/>
-                                </c:forEach>
+                                        <c:set var="totalPrice" value="${totalPrice + item.buyPrice}"/>
+                                    </c:forEach>
+                                </div>
                             </div>
 
                             <div class="col-lg-5">
@@ -183,7 +193,10 @@
 
                                         <div class="d-flex justify-content-between">
                                             <p class="mb-2">Subtotal</p>
-                                            <p class="mb-2">$<c:out value="${totalPrice}"/></p>
+                                            <p class="mb-2">
+                                                $<fmt:formatNumber type="number" maxFractionDigits="2"
+                                                                   minFractionDigits="2" value="${totalPrice}"/>
+                                            </p>
                                         </div>
 
                                         <div class="d-flex justify-content-between">
@@ -193,16 +206,23 @@
 
                                         <div class="d-flex justify-content-between mb-4">
                                             <p class="mb-2">Total(Incl. taxes)</p>
-                                            <p class="mb-2">$<c:out value="${totalPrice + 20}"/></p>
+                                            <p class="mb-2">$<fmt:formatNumber type="number" maxFractionDigits="2"
+                                                                               minFractionDigits="2"
+                                                                               value="${totalPrice+20}"/>
+                                            </p>
                                         </div>
 
-                                        <button data-mdb-button-init data-mdb-ripple-init type="button"
-                                                class="btn btn-info btn-lg w-100">
-                                            <div class="d-flex justify-content-between">
-                                                <span>$<c:out value="${totalPrice + 20}"/></span>
-                                                <span>Checkout <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
-                                            </div>
-                                        </button>
+                                        <form id="checkoutForm" action="CheckoutServlet" method="get">
+                                            <input type="hidden" name="orderNumber" value="${orderNumber}" />
+                                            <button type="submit" class="btn btn-info btn-lg w-100">
+                                                <div class="d-flex justify-content-between">
+            <span>$<fmt:formatNumber type="number" maxFractionDigits="2"
+                                     minFractionDigits="2"
+                                     value="${totalPrice + 20}"/></span>
+                                                    <span>Checkout <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
+                                                </div>
+                                            </button>
+                                        </form>
 
 
                                     </div>
