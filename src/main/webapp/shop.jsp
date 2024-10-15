@@ -52,9 +52,9 @@
                     </div>
                 </c:forEach>
             </div>
+            <jsp:include page="component/pagination.jsp"/>
         </div>
     </div>
 </div>
-
 </body>
 </html>

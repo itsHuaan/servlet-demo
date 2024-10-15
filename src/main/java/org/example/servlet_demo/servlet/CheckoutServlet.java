@@ -57,6 +57,8 @@ public class CheckoutServlet extends HttpServlet {
             }
             System.out.println(count + " rows inserted");
         }
+        session.setAttribute("cart", cart);
+        request.getRequestDispatcher("ShopServlet").forward(request, response);
     }
 
     @Override
@@ -105,4 +107,6 @@ public class CheckoutServlet extends HttpServlet {
         }
         return false;
     }
+
+
 }

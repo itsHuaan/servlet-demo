@@ -17,7 +17,8 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String orderBy = request.getParameter("orderBy");
-        List<ProductDTO> list_product = _productService.getProducts(orderBy);
+//        List<ProductDTO> list_product = _productService.getProducts(orderBy);
+        List<ProductDTO> list_product = _productService.getLimitProducts(1, 10);
         HttpSession session = request.getSession();
         List<String> lines = (List<String>) session.getAttribute("product_lines");
         if (lines == null) {

@@ -19,7 +19,14 @@ public class ShopServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String orderBy = request.getParameter("orderBy");
         String line = request.getParameter("productLine");
-        List<ProductDTO> list_product = _productService.getProducts(orderBy);
+        int pageNumber = request.getParameter("page") == null || Integer.parseInt(request.getParameter("page")) < 1
+                ? 1
+                : Integer.parseInt(request.getParameter("page"));
+        int pageSize = 12;
+        int count = _productService.getProductCount();
+        int noOfPages = (int) Math.ceil((double) count / pageSize);
+//        List<ProductDTO> list_product = _productService.getProducts(orderBy);
+        List<ProductDTO> list_product = _productService.getLimitProducts(pageNumber, pageSize);
         List<ProductDTO> list_product_by_line = _productService.getProductByLine(line);
         HttpSession session = request.getSession();
         List<ProductDTO> cart = (List<ProductDTO>) session.getAttribute("cart");
@@ -40,6 +47,7 @@ public class ShopServlet extends HttpServlet {
             request.setAttribute("list_product", list_product_by_line);
         }
         session.setAttribute("cart", cart);
+        request.setAttribute("noOfPages", noOfPages);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("shop.jsp");
         requestDispatcher.forward(request, response);
     }

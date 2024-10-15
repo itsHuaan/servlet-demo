@@ -57,6 +57,51 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<ProductDTO> getLimitProducts(int pageNumber, int pageSize) {
+        List<ProductDTO> products = new ArrayList<>();
+        try {
+            connection = dbConnector.openConnection();
+            int offset;
+            String query = "SELECT * FROM products WHERE status = 1 LIMIT ?, ?";
+            if (pageNumber == 1) {
+                offset = 0;
+            } else {
+                offset = (pageNumber - 1) * pageSize;
+            }
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, offset);
+            statement.setInt(2, pageSize);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String productCode = resultSet.getString(1);
+                String productName = resultSet.getString(2);
+                String productLine = resultSet.getString(3);
+                String productScale = resultSet.getString(4);
+                String productVendor = resultSet.getString(5);
+                String productDescription = resultSet.getString(6);
+                int quantityInStock = resultSet.getInt(7);
+                double buyPrice = resultSet.getDouble(8);
+                double MSRP = resultSet.getDouble(9);
+                boolean status = resultSet.getBoolean(10);
+                products.add(new ProductDTO(productCode,
+                        productName,
+                        productLine,
+                        productScale,
+                        productVendor,
+                        productDescription,
+                        quantityInStock,
+                        buyPrice,
+                        MSRP,
+                        status));
+            }
+            dbConnector.closeConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return products;
+    }
+
+    @Override
     public ProductDTO getProductByID(String id) {
         ProductDTO product = new ProductDTO();
         try {
@@ -184,6 +229,22 @@ public class ProductService implements IProductService {
             throw new RuntimeException(e);
         }
         return products;
+    }
+
+    @Override
+    public int getProductCount() {
+        try {
+            connection = dbConnector.openConnection();
+            String query = "select count(*) from products where status = 1";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
     }
 
     @Override
